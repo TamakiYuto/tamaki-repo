@@ -20,7 +20,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_IAM }}
           role-session-name: samplerolesession
           aws-region: ${{ env.AWS_REGION }}
       - name: npm install
