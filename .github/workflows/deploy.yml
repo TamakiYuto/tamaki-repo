@@ -1,18 +1,19 @@
-# Sample workflow to access AWS resources when workflow is tied to branch
-# The workflow Creates static website using aws s3
+# ブランチにプッシュされたときにこのワークフローが実行されます
 name: AWS example workflow
 on:
   push
 env:
   BUCKET_NAME : "hellocdkstack-myfirstbucketb8884501-xts1xjpe0eli"
   AWS_REGION : "ap-northeast-1"
-# permission can be added at job level or workflow level
+# ジョブレベルまたはワークフローレベルで権限を追加できます
 jobs:
   S3PackageUpload:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      # JWTを要求するために必要です
+      id-token: write   
+      # actions/checkoutに必要です 
+      contents: read    
 
     steps:
       - name: Git clone the repository
@@ -20,16 +21,22 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
+          # Assume RoleのARN
           role-to-assume: ${{ secrets.AWS_IAM }}
+          # セッション名
           role-session-name: samplerolesession
+          # AWSリージョン
           aws-region: ${{ env.AWS_REGION }}
       - name: npm install
+        # npm依存関係のインストール
         run: npm install
       
       - name: build
+        # プロジェクトのビルド
         run: npm run build
 
-      # Upload a file to AWS s3
+      # ファイルをAWS S3にアップロード
       - name:  Copy file to s3
+        #ビルドされたファイルをS3にアップロード
         run: |
           aws s3 cp ./build s3://${{ env.BUCKET_NAME }}/ --recursive
