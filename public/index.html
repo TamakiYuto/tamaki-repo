@@ -1,54 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>HTMLファイルからPOSTでJSONデータを送信する</title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-
-<script type="text/javascript">
-    $(function(){
-        $("#response").html("Response Values");
-
-        $("#button").click( function(){
-            // ここのURLはAPIのデプロイ時に表示されるURL（後述）に差し替える
-            var url = "https://xxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev";
-                var JSONdata = {
-                    "key1": $("#text").val()
-                };
-
-            alert(JSON.stringify(JSONdata));
-
-            $.ajax({
-                type : 'post',
-                url : url,
-                data : JSON.stringify(JSONdata),
-                contentType: 'application/json',
-                dataType : 'json',
-                scriptCharset: 'utf-8',
-                success : function(data) {
-
-                    // Success
-                    alert("success");
-                    alert(JSON.stringify(data));
-                    $("#response").html(JSON.stringify(data));
-                },
-                error : function(data) {
-
-                    // Error
-                    alert("error");
-                    alert(JSON.stringify(data));
-                    $("#response").html(JSON.stringify(data));
-                }
-            });
-        })
-    })
-</script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lambda API Frontend</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>HTMLファイルからPOSTでJSONデータを送信する</h1>
-    <p>入力テキスト: <input type="text" id="text" size="30" placeholder="テキストを入力してください"></p>
-    <p><button id="button" type="button">送信</button></p>
-    <textarea id="response" cols=120 rows=10 disabled></textarea>
+  <div class="container">
+    <h1>Lambda API Frontend</h1>
+    <button id="apiButton">Call API</button>
+    <div id="apiResponse" class="response"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
