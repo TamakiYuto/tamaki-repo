@@ -41,7 +41,7 @@ jobs:
         run: npm install -g aws-cdk
 
       - name: Bootstrap CDK
-        run: cdk bootstrap
+        run: cd back-cdk && cdk bootstrap 
 
       - name: Deploy Lambda
-        run: cdk deploy --require-approval never
+        run: cd back-cdk && cdk deploy --require-approval never
