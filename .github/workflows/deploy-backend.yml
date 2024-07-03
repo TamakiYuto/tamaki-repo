@@ -1,0 +1,41 @@
+name: Deploy Backend to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: "ap-northeast-1"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM }}
+          role-session-name: backend-deploy-session
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Bootstrap CDK
+        run: cdk bootstrap
+
+      - name: Deploy Lambda
+        run: cdk deploy --require-approval never
