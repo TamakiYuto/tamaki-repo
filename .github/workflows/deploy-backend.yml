@@ -11,6 +11,12 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      # JWTを要求するために必要です
+      id-token: write   
+      # actions/checkoutに必要です 
+      contents: read    
+
 
     steps:
       - name: Checkout code
