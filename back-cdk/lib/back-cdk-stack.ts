@@ -10,7 +10,7 @@ export class LambdaApiGatewayStack extends cdk.Stack {
     // Lambda関数の作成
     const lambdaFunction = new lambda.Function(this, 'MyLambdaFunction', {
       // Lambda関数の実行環境を指定（Node.js 16）
-      runtime: lambda.Runtime.NODEJS_16_X, 
+      runtime: lambda.Runtime.NODEJS_20_X, 
       // Lambda関数のエントリーポイントを指定
       handler: 'index.handler', 
       // Lambda関数のコードが格納されているディレクトリを指定
