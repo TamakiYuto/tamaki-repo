@@ -35,9 +35,10 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: | 
-             cd back-cdk 
-             npm install
+        run:  npm install
+
+      - name: Build TypeScript code
+        run: npm run build
 
       - name: Install AWS CDK
         run: | 
