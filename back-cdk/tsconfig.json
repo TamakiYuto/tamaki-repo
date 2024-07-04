@@ -28,7 +28,6 @@
   "include": [
     "lib/**/*.ts",
     "bin/**/*.ts",
-    "node_modules/aws-cdk-lib/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",
