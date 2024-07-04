@@ -35,13 +35,19 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run:  npm install
+        run:  | 
+             cd back-cdk
+             npm install
 
       - name: Build TypeScript code
-        run: npm run build
+        run: | 
+             cd back-cdk
+             npm run build
 
       - name: Install AWS CDK
-        run: npm install -g aws-cdk
+        run: | 
+             cd back-cdk
+             npm install -g aws-cdk
 
       - name: Bootstrap CDK Deploy Lambda
         run: | 
