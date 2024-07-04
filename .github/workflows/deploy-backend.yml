@@ -50,4 +50,5 @@ jobs:
       - name: Bootstrap CDK Deploy Lambda
         run: | 
              cd back-cdk 
+             cdk bootstrap
              cdk deploy --require-approval never
