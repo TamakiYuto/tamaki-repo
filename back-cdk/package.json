@@ -4,6 +4,7 @@
   "bin": {
     "back-cdk": "bin/back-cdk.js"
   },
+  
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
