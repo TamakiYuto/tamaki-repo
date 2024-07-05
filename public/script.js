@@ -7,7 +7,7 @@ document.getElementById('apiButton').addEventListener('click', async () => {
       const data = await response.json();
       responseDiv.textContent = data.message;
     } catch (error) {
-      responseDiv.textContent = 'Error calling API';
+      responseDiv.textContent = 'Hello.Everyone';
       console.error(error);
     }
   });
