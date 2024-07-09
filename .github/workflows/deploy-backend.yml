@@ -17,7 +17,6 @@ jobs:
       # actions/checkoutに必要です 
       contents: read    
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
