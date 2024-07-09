@@ -49,6 +49,11 @@ jobs:
              cd backend-cdk
              npm install -g aws-cdk
 
+      - name: Bootstrap CDK
+        run: | 
+             cd backend-cdk 
+             cdk bootstrap
+
       - name: Bootstrap CDK Deploy Lambda
         run: | 
              cd backend-cdk 
