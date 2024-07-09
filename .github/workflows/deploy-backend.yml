@@ -34,6 +34,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install AWS CDK
+        run: | 
+             cd backend-cdk
+             npm install -g aws-cdk
+
       - name: Install dependencies
         run:  | 
              cd backend-cdk
@@ -43,11 +48,6 @@ jobs:
         run: | 
              cd backend-cdk
              npm run build
-
-      - name: Install AWS CDK
-        run: | 
-             cd backend-cdk
-             npm install -g aws-cdk
 
       - name: Bootstrap CDK
         run: | 
