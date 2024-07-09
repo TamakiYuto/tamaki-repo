@@ -51,7 +51,7 @@ jobs:
       - name: Bootstrap CDK
         run: | 
              cd backend-cdk 
-             cdk bootstrap aws://${{ secrets.AWS_IAM }}/${{ env.AWS_REGION }}
+             cdk bootstrap aws://${{ secrets.654654268093 }}/${{ env.AWS_REGION }}
 
       - name: Bootstrap CDK Deploy Lambda
         run: | 
