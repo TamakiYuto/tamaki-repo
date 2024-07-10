@@ -53,7 +53,7 @@ export class MyServerlessProjectStack extends cdk.Stack {
     // API Gatewayの作成
     const api = new apigateway.RestApi(this, 'MyApi', {
       restApiName: 'My Service',
-      description: 'This service serves my Lambda function.',
+      description: "Deployed by CDK" ,
     });
 
     const getWidgetsIntegration = new apigateway.LambdaIntegration(myLambda, {
