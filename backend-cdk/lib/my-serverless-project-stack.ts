@@ -14,35 +14,35 @@ export class MyServerlessProjectStack extends cdk.Stack {
       maxAzs: 2,
     });
 
-    // RDSインスタンスの作成 (MariaDB)
-    const rdsInstance = new rds.DatabaseInstance(this, 'MyRdsInstance', {
-      engine: rds.DatabaseInstanceEngine.mariaDb({
-        version: rds.MariaDbEngineVersion.VER_10_5,
-      }),
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
-      vpc,
-      multiAz: false,
-      allocatedStorage: 20,
-      storageType: rds.StorageType.GP2,
-      deletionProtection: false,
-      databaseName: 'mydatabase',
-      credentials: rds.Credentials.fromGeneratedSecret('admin'),
-      publiclyAccessible: false,
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-      },
-    });
+    // // RDSインスタンスの作成 (MariaDB)
+    // const rdsInstance = new rds.DatabaseInstance(this, 'MyRdsInstance', {
+    //   engine: rds.DatabaseInstanceEngine.mariaDb({
+    //     version: rds.MariaDbEngineVersion.VER_10_5,
+    //   }),
+    //   instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
+    //   vpc,
+    //   multiAz: false,
+    //   allocatedStorage: 20,
+    //   storageType: rds.StorageType.GP2,
+    //   deletionProtection: false,
+    //   databaseName: 'mydatabase',
+    //   credentials: rds.Credentials.fromGeneratedSecret('admin'),
+    //   publiclyAccessible: false,
+    //   vpcSubnets: {
+    //     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+    //   },
+    // });
 
     // Lambda関数の作成
     const myLambda = new lambda.Function(this, 'MyLambda', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset('src/handlers'),
       environment: {
-        RDS_HOSTNAME: rdsInstance.dbInstanceEndpointAddress,
+        // RDS_HOSTNAME: rdsInstance.dbInstanceEndpointAddress,
         RDS_DB_NAME: 'mydatabase',
         RDS_USERNAME: 'admin',
-        RDS_PASSWORD: rdsInstance.secret?.secretValueFromJson('password')?.toString() ?? '',
+        // RDS_PASSWORD: rdsInstance.secret?.secretValueFromJson('password')?.toString() ?? '',
       },
       vpc,
       vpcSubnets: {
