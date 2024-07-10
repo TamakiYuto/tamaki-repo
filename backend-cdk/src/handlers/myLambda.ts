@@ -1,30 +1,35 @@
-import { APIGatewayEvent, Context, Callback } from 'aws-lambda';
-import * as AWS from 'aws-sdk';
 import { Client } from 'pg';
-import { getSecretValue } from '../models/database';
 
-exports.handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
-  const secretName = process.env.DB_SECRET_NAME;
-  const secret = await getSecretValue(secretName || '');
-  
+export const handler = async (event: any = {}): Promise<any> => {
   const client = new Client({
-    host: secret.host,
-    port: secret.port,
-    user: secret.username,
-    password: secret.password,
-    database: secret.dbname,
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    database: process.env.RDS_DB_NAME,
   });
 
-  await client.connect();
-
-  // GETメソッドの処理例
-  if (event.httpMethod === 'GET') {
-    const result = await client.query('SELECT * FROM my_table');
-    callback(null, {
+  try {
+    await client.connect();
+    const res = await client.query('SELECT NOW()');
+    await client.end();
+    return {
       statusCode: 200,
-      body: JSON.stringify(result.rows),
-    });
-  }
+      body: JSON.stringify(res.rows),
+    };
+  } catch (err) {
+    console.error('Error connecting to the database', err);
 
-  await client.end();
+    let errorMessage = 'Error connecting to the database';
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: errorMessage,
+        error: err,
+      }),
+    };
+  }
 };
