@@ -48,7 +48,12 @@ jobs:
              cd backend-cdk
              npm run build
 
-      - name: Bootstrap CDK Deploy Lambda
+      - name: Bootstrap CDK
+        run: | 
+             cd backend-cdk 
+             cdk bootstrap
+
+      - name: Deploy Lambda
         run: | 
              cd backend-cdk 
              cdk deploy --require-approval never
