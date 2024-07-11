@@ -1,17 +1,29 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { SecretsManager } from 'aws-sdk';
-import { Client } from 'pg'; // `pg`はPostgreSQL用ですが、MariaDBにも使用可能です
+import { createConnection } from 'mysql2/promise';
 
 const secretsManager = new SecretsManager();
-const secretArn = process.env.DATABASE_SECRET_ARN!;
+const secretId = process.env.DATABASE_SECRET_ARN!;
 const databaseName = process.env.DATABASE_NAME!;
 
-export const handler: APIGatewayProxyHandler = async (event) => {
-  try {
-    const secretValue = await secretsManager.getSecretValue({ SecretId: secretArn }).promise();
-    const secret = JSON.parse(secretValue.SecretString!);
+interface DatabaseSecret {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+}
 
-    const client = new Client({
+export const handler: APIGatewayProxyHandler = async (event, context) => {
+  let connection;
+  try {
+    const secretValue = await secretsManager.getSecretValue({ SecretId: secretId }).promise();
+    if (!secretValue.SecretString) {
+      throw new Error('SecretString is empty');
+    }
+
+    const secret: DatabaseSecret = JSON.parse(secretValue.SecretString);
+
+    connection = await createConnection({
       host: secret.host,
       port: secret.port,
       user: secret.username,
@@ -19,27 +31,26 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       database: databaseName,
     });
 
-    await client.connect();
-
-    // クエリを実行
-    const res = await client.query('SELECT NOW()');
-
-    await client.end();
+    const [rows] = await connection.execute('SELECT 1 + 1 AS result');
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        message: 'Connected to the database successfully!',
-        time: res.rows[0],
-      }),
+      body: JSON.stringify({ result: rows }),
     };
   } catch (err) {
+    let errorMessage = 'An unknown error occurred';
+
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        message: 'Failed to connect to the database.',
-        error: err.message,
-      }),
+      body: JSON.stringify({ error: errorMessage }),
     };
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
   }
 };
