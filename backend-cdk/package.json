@@ -2,7 +2,7 @@
   "name": "backend-cdk",
   "version": "0.1.0",
   "bin": {
-    "backend-cdk": "bin/backend-cdk.js"
+    "backend-cdk": "bin/my-serverless-project.js"
   },
   "scripts": {
     "build": "tsc",
