@@ -31,22 +31,31 @@ export class MyServerlessProjectStack extends cdk.Stack {
 
      // Lambda関数を作成
      const myLambda = new lambda.Function(this, 'MyLambda', {
-      runtime: lambda.Runtime.NODEJS_10_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'handlers/myLambda.handler',
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('src/handlers'),
       // environment: {
       //   DATABASE_SECRET_ARN: rdsInstance.secret!.secretArn,
       //   DATABASE_NAME: 'MyDatabase',
       // },
       vpc,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+      },
     });
 
      // RDSインスタンスへの接続許可をLambdaに付与
     //  rdsInstance.connections.allowDefaultPortFrom(myLambda);
 
-    // API Gatewayを作成し、Lambda関数をエンドポイントとして設定
-    new apigateway.LambdaRestApi(this, 'MyApi', {
-      handler: myLambda,
-    });
-  }
+   // API Gatewayの作成
+   const api = new apigateway.RestApi(this, 'MyApi', {
+    restApiName: 'My Service',
+    description: 'This service serves my Lambda function.',
+  });
+  const getWidgetsIntegration = new apigateway.LambdaIntegration(myLambda, {
+    requestTemplates: { 'application/json': '{"statusCode": 200}' },
+  });
+  api.root.addMethod('GET', getWidgetsIntegration);
+    }
 }
+
