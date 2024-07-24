@@ -2,9 +2,9 @@ import { Client } from 'pg';
 
 export const handler = async (event: any = {}): Promise<any> => {
   const client = new Client({
-    host: process.env.RDS_HOSTNAME,
+    // host: process.env.RDS_HOSTNAME,
     user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
+    // password: process.env.RDS_PASSWORD,
     database: process.env.RDS_DB_NAME,
   });
 
